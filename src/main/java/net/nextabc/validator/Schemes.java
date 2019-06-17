@@ -2,6 +2,10 @@ package net.nextabc.validator;
 
 import net.nextabc.validator.testers.*;
 
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * @author 陈哈哈 (bitschen@163.com)
  * @since 1.0.0
@@ -76,5 +80,14 @@ public class Schemes {
                 Tester.Options.of("length", max))
                 .dontTrimValue()
                 .message("长度至少为" + max);
+    }
+
+    public static Scheme inSet(Set<String> allowed) {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new InSetTester(),
+                Tester.Options.from(allowed.stream().collect(Collectors.toMap(Function.identity(), Function.identity())))
+        ).dontTrimValue()
+                .message("不在允许的集合内");
     }
 }

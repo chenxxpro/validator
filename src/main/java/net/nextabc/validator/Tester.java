@@ -1,6 +1,7 @@
 package net.nextabc.validator;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 陈哈哈 (bitschen@163.com)
@@ -26,6 +27,12 @@ public interface Tester {
         public static Options of(String name, Object value) {
             final Options opts = new Options(1);
             opts.put(name, value);
+            return opts;
+        }
+
+        public static Options from(Map<String, Object> data) {
+            final Options opts = new Options(data.size());
+            opts.putAll(data);
             return opts;
         }
     }

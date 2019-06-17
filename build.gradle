@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'net.nextabc'
-version '1.0.1'
+version '1.0.2'
 description = 'A Java8 validator library'
 
 sourceCompatibility = JavaVersion.VERSION_1_8

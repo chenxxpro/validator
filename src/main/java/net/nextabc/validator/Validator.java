@@ -143,9 +143,8 @@ public class Validator {
      * @return Validator
      */
     public Validator addField(Source source, Scheme... schemes) {
-        final Field newField = new Field().setSource(source)
-                .addSchemes(schemes);
-        this.fields.add(newField);
+        this.fields.add(new Field().setSource(source)
+                .addSchemes(schemes));
         return this;
     }
 
@@ -156,10 +155,11 @@ public class Validator {
      * @param schemes 校验方案列表
      * @return Validator
      */
-    public Fluent field(String key, Scheme... schemes) {
-        return new Fluent(this, new Field()
-                .setKey(key)
-                .addSchemes(schemes));
+    public FluentField field(String key, Scheme... schemes) {
+        FluentField f = new FluentField(this);
+        f.setKey(key);
+        f.addSchemes(schemes);
+        return f;
     }
 
     /**
@@ -169,26 +169,25 @@ public class Validator {
      * @param schemes 校验方案
      * @return Validator
      */
-    public Fluent field(Source source, Scheme... schemes) {
-        return new Fluent(this, new Field()
-                .setSource(source)
-                .addSchemes(schemes));
+    public FluentField field(Source source, Scheme... schemes) {
+        FluentField f = new FluentField(this);
+        f.setSource(source);
+        f.addSchemes(schemes);
+        return f;
     }
 
     ////
 
-    public static class Fluent extends Field {
+    public static class FluentField extends Field {
 
         private final Validator ref;
-        private final Field field;
 
-        public Fluent(Validator ref, Field field) {
+        public FluentField(Validator ref) {
             this.ref = ref;
-            this.field = field;
         }
 
         public Validator add() {
-            ref.fields.add(field);
+            ref.fields.add(this);
             return ref;
         }
     }

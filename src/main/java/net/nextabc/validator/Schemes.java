@@ -2,6 +2,7 @@ package net.nextabc.validator;
 
 import net.nextabc.validator.testers.*;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -86,11 +87,22 @@ public class Schemes {
                 .message("长度至少为" + max);
     }
 
+    public static Scheme unixTimestamp() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new MinLengthTester(),
+                null)
+                .dontTrimValue()
+                .message("必须为Unix时间戳");
+    }
+
     public static Scheme inSet(Set<String> allowed) {
+        final Map<String, Object> map = allowed.stream()
+                .collect(Collectors.toMap(Function.identity(), v -> 0));
         return new Scheme(
                 DEFAULT_PRIORITY,
                 new InSetTester(),
-                Tester.Options.from(allowed.stream().collect(Collectors.toMap(Function.identity(), Function.identity())))
+                Tester.Options.from(map)
         ).dontTrimValue()
                 .message("不在允许的集合内");
     }

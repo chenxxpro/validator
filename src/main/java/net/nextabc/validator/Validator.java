@@ -112,6 +112,52 @@ public class Validator {
         return this;
     }
 
+    /**
+     * 添加指定Key的校验条目
+     *
+     * @param key     数值Key
+     * @param schemes 校验方案列表
+     * @return Validator
+     */
+    public Fluent field(String key, Scheme... schemes) {
+        return new Fluent(this, new Field()
+                .setKey(key)
+                .addSchemes(schemes));
+    }
+
+    /**
+     * 添加指定数据源的校验条目
+     *
+     * @param source  数据源
+     * @param schemes 校验方案
+     * @return Validator
+     */
+    public Fluent field(Source source, Scheme... schemes) {
+        return new Fluent(this, new Field()
+                .setSource(source)
+                .addSchemes(schemes));
+    }
+
+    ////
+
+    public static class Fluent extends Field {
+
+        private final Validator ref;
+        private final Field field;
+
+        public Fluent(Validator ref, Field field) {
+            this.ref = ref;
+            this.field = field;
+        }
+
+        public Validator add() {
+            ref.fields.add(field);
+            return ref;
+        }
+    }
+
+    ////
+
     private Result performTest(Field field) {
         final String value = field.source.value();
         field.schemes.sort(SORT);

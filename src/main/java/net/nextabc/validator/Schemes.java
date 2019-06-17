@@ -55,13 +55,17 @@ public class Schemes {
                 .message("必须为有效的身份证号码");
     }
 
-    public static Scheme length(int length) {
+    public static Scheme fixedLength(int fixedLength) {
         return new Scheme(
                 DEFAULT_PRIORITY,
                 new FixedLengthTester(),
-                Tester.Options.of("length", length))
+                Tester.Options.of("length", fixedLength))
                 .dontTrimValue()
-                .message("长度必须为" + length);
+                .message("长度必须为" + fixedLength);
+    }
+
+    public static Scheme length(int length) {
+        return fixedLength(length);
     }
 
     public static Scheme maxLength(int max) {

@@ -12,14 +12,16 @@ public class Texts {
         return null == in || in.length() == 0;
     }
 
-    /**
-     * If input matched regex
-     *
-     * @param input Input String
-     * @param regex Regex
-     * @return is matched
-     */
     public static boolean regexMatch(String input, String regex) {
         return Pattern.compile(regex).matcher(input).matches();
+    }
+
+    public static boolean isDigits(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            if (!Character.isDigit(value.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

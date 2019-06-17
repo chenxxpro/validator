@@ -7,10 +7,12 @@ import net.nextabc.validator.Texts;
  * @author 陈哈哈 (bitschen@163.com)
  * @since 1.0.0
  */
-public class DigitsTester extends EmptyableTester {
+public class UnixTimestampTester extends EmptyableTester {
+
+    private static final int LENGTH = String.valueOf(System.currentTimeMillis() / 1000).length();
 
     @Override
     public boolean testNotEmptyValue(Options opts, String value) throws Exception {
-        return Texts.isDigits(value);
+        return LENGTH == value.length() && Texts.isDigits(value);
     }
 }

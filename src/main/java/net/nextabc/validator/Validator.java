@@ -82,7 +82,7 @@ public class Validator {
      * 解析参数到指定数据类型
      *
      * @param input 原始输入数据
-     * @return 已解析到特定类型的Map<String, Object>
+     * @return 已解析到特定类型的Map
      * @throws ValidationException 解析参数失败时
      */
     public Map<String, Object> parse(Map<String, String> input) throws ValidationException {

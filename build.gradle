@@ -1,16 +1,149 @@
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/public" }
+        jcenter()
+    }
+}
+
 plugins {
     id 'java'
+    id "com.jfrog.bintray" version "1.8.1"
+    id 'maven'
+    id 'maven-publish'
 }
 
 group 'net.nextabc'
 version '1.0.0'
+description = 'A Java8 validator library'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-    mavenCentral()
+    maven { url "https://maven.aliyun.com/repository/central" }
+    maven { url "https://maven.aliyun.com/repository/jcenter" }
+    jcenter()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+ext {
+    projectGroupId = project.group
+    projectVersion = project.version
+    projectName = rootProject.name
+    projectDesc = "Validator: A Java8 validator library"
+    projectURL = "https://github.com/bitschen/validator-java"
+    projectVCS = "https://github.com/bitschen/validator-java"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/8/docs/api"
+        title projectName
+    }
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+
+    publications = ['mavenJava']
+    configurations = ['archives']
+
+    dryRun = false
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        name = projectName
+        userOrg = 'nextabc'
+
+        licenses = ['Apache-2.0']
+        vcsUrl = projectVCS
+        labels = ['java', 'toolkit', 'lang']
+
+        publicDownloadNumbers = true
+
+        version {
+            name = projectVersion
+            desc = projectDesc
+            vcsTag = projectVersion
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+}
+
+def pomConfig = {
+
+    name projectName
+    url projectURL
+    inceptionYear '2019'
+
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+
+    developers {
+        developer {
+            id "bitschen"
+            name "Bits Chen"
+            email "bitschen@163.com"
+        }
+    }
+
+    scm {
+        url projectVCS
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId projectGroupId
+            artifactId projectName
+            version projectVersion
+
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', projectDesc)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.8'
 }

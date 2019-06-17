@@ -11,14 +11,18 @@ import java.util.Map;
  */
 public class Field {
 
-    private String key;
-
+    String key;
+    DataType type = DataType.String;
     final List<Scheme> schemes = new ArrayList<>();
-
     Source source;
 
     public Field addSchemes(Scheme... schemes) {
         this.schemes.addAll(Arrays.asList(schemes));
+        return this;
+    }
+
+    public Field setType(DataType type) {
+        this.type = type;
         return this;
     }
 

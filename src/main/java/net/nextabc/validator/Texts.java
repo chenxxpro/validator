@@ -24,4 +24,37 @@ public class Texts {
         }
         return true;
     }
+
+    ////
+
+    public static int mustInt(String value) throws ValidationException {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            throw new ValidationException("参数不能解析为Int类型:[" + value + "]", e);
+        }
+    }
+
+    public static long mustLong(String value) throws ValidationException {
+        try {
+            return Long.parseLong(value);
+        } catch (Exception e) {
+            throw new ValidationException("参数不能解析为Long类型:[" + value + "]", e);
+        }
+    }
+
+    public static String mustString(String value) throws ValidationException {
+        if (value == null || value.isEmpty()) {
+            throw new ValidationException("参数不能为空的String类型");
+        }
+        return value;
+    }
+
+    public static boolean mustBoolean(String value) throws ValidationException {
+        try {
+            return Boolean.parseBoolean(value);
+        } catch (Exception e) {
+            throw new ValidationException("参数不能解析为Boolean类型:[" + value + "]", e);
+        }
+    }
 }

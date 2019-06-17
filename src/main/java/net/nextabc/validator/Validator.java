@@ -79,6 +79,43 @@ public class Validator {
     }
 
     /**
+     * 解析参数到指定数据类型
+     *
+     * @param input 原始输入数据
+     * @return 已解析到特定类型的Map<String, Object>
+     * @throws ValidationException 解析参数失败时
+     */
+    public Map<String, Object> parse(Map<String, String> input) throws ValidationException {
+        final Map<String, Object> out = new HashMap<>(input.size());
+        for (Field field : this.fields) {
+            if (Texts.isNullOrEmpty(field.key)) {
+                continue;
+            }
+            final String value = input.get(field.key);
+            if (value == null) {
+                continue;
+            }
+            switch (field.type) {
+                case Int:
+                    out.put(field.key, Texts.mustInt(value));
+                    break;
+
+                case Long:
+                    out.put(field.key, Texts.mustLong(value));
+                    break;
+
+                case Boolean:
+                    out.put(field.key, Texts.mustBoolean(value));
+                    break;
+
+                default:
+                    out.put(field.key, value);
+            }
+        }
+        return out;
+    }
+
+    /**
      * 添加指定Key的校验条目
      *
      * @param key     数值Key

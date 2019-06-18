@@ -26,7 +26,7 @@ public class Schemes {
                 new NotNullOrEmptyTester(),
                 null)
                 .dontTrimValue()
-                .message("不能为空");
+                .message("参数{key}不能为空");
     }
 
     public static Scheme digits() {
@@ -35,7 +35,7 @@ public class Schemes {
                 new DigitsTester(),
                 null)
                 .dontTrimValue()
-                .message("必须为数字");
+                .message("参数{key}必须为数字");
     }
 
     public static Scheme email() {
@@ -44,7 +44,7 @@ public class Schemes {
                 new EmailTester(),
                 null)
                 .trimValue(true)
-                .message("必须为数字");
+                .message("参数{key}必须为有效的邮件地址");
     }
 
     public static Scheme cnIdCard() {
@@ -53,7 +53,7 @@ public class Schemes {
                 new CNIdCardTester(),
                 null)
                 .trimValue(true)
-                .message("必须为有效的身份证号码");
+                .message("参数{key}必须为有效的身份证号码");
     }
 
     public static Scheme fixedLength(int fixedLength) {
@@ -62,7 +62,7 @@ public class Schemes {
                 new FixedLengthTester(),
                 Tester.Options.of("length", fixedLength))
                 .dontTrimValue()
-                .message("长度必须为" + fixedLength);
+                .message("参数{key}长度必须等于" + fixedLength);
     }
 
     public static Scheme length(int length) {
@@ -75,16 +75,16 @@ public class Schemes {
                 new MaxLengthTester(),
                 Tester.Options.of("length", max))
                 .dontTrimValue()
-                .message("长度最大为" + max);
+                .message("参数{key}最大字符长度为" + max);
     }
 
-    public static Scheme minLength(int max) {
+    public static Scheme minLength(int min) {
         return new Scheme(
                 DEFAULT_PRIORITY,
                 new MinLengthTester(),
-                Tester.Options.of("length", max))
+                Tester.Options.of("length", min))
                 .dontTrimValue()
-                .message("长度至少为" + max);
+                .message("参数{key}最小字符长度为" + min);
     }
 
     public static Scheme unixTimestamp() {
@@ -93,7 +93,7 @@ public class Schemes {
                 new MinLengthTester(),
                 null)
                 .dontTrimValue()
-                .message("必须为Unix时间戳");
+                .message("参数{key}必须为Unix时间戳");
     }
 
     public static Scheme inSet(Set<String> allowed) {
@@ -104,6 +104,6 @@ public class Schemes {
                 new InSetTester(),
                 Tester.Options.from(map)
         ).dontTrimValue()
-                .message("不在允许的集合内");
+                .message("参数{key}不在允许的集合内");
     }
 }

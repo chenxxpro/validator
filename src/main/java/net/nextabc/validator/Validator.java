@@ -193,11 +193,12 @@ public class Validator {
                 final String testValue = scheme.processValue(value);
                 final boolean passed = scheme.perform(testValue);
                 if (!passed) {
-                    return Result.create(false, scheme.message);
+                    final String message = scheme.message.replace("{key}", field.optsKey);
+                    return Result.create(false, message);
                 }
             }
         } catch (Exception e) {
-            return Result.create(false, e.getMessage());
+            return Result.create(false, "ERR:" + e.getMessage());
         }
         return null;
     }

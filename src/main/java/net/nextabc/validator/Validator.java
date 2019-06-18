@@ -9,7 +9,7 @@ import java.util.*;
 public class Validator {
 
     private final List<Field> fields = new ArrayList<>();
-    private final Map<String, Field> keyFields = new HashMap<>();
+    private final Set<String> keys = new HashSet<>();
 
     /**
      * 根据给定数据，校验并返回结果
@@ -132,20 +132,15 @@ public class Validator {
     /**
      * 添加指定数据源的校验条目
      *
-     * @param in 数据源校验条目
+     * @param newField 数据源校验条目
      * @return Validator
      */
-    public Validator addField(Field in) {
-        final Field found = this.keyFields.get(in.optsKey);
-        if (null != found) {
-            found.schemes(in.schemes);
-        } else {
-            final Field newField = new Field()
-                    .optionKey(in.optsKey)
-                    .schemes(in.schemes);
-            this.fields.add(newField);
-            this.keyFields.put(in.optsKey, newField);
+    public Validator addField(Field newField) {
+        if (this.keys.contains(newField.optsKey)) {
+            throw new RuntimeException("重复的参数Key[" + newField.optsKey + "]");
         }
+        this.fields.add(newField);
+        this.keys.add(newField.optsKey);
         return this;
     }
 

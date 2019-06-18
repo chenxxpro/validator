@@ -36,9 +36,9 @@ public class Texts {
 
     ////
 
-    public static int mustInt(String value) throws ValidationException {
+    public static Integer mustInt(String value) throws ValidationException {
         if (value == null) {
-            return 0;
+            return null;
         }
         try {
             return Integer.parseInt(value);
@@ -47,9 +47,9 @@ public class Texts {
         }
     }
 
-    public static long mustLong(String value) throws ValidationException {
+    public static Long mustLong(String value) throws ValidationException {
         if (value == null) {
-            return 0;
+            return null;
         }
         try {
             return Long.parseLong(value);
@@ -58,9 +58,9 @@ public class Texts {
         }
     }
 
-    public static float mustFloat(String value) throws ValidationException {
+    public static Float mustFloat(String value) throws ValidationException {
         if (value == null) {
-            return 0;
+            return null;
         }
         try {
             return Float.parseFloat(value);
@@ -69,9 +69,9 @@ public class Texts {
         }
     }
 
-    public static double mustDouble(String value) throws ValidationException {
+    public static Double mustDouble(String value) throws ValidationException {
         if (value == null) {
-            return 0;
+            return null;
         }
         try {
             return Double.parseDouble(value);
@@ -80,9 +80,9 @@ public class Texts {
         }
     }
 
-    public static boolean mustBoolean(String value) throws ValidationException {
+    public static Boolean mustBoolean(String value) throws ValidationException {
         if (value == null) {
-            return false;
+            return null;
         }
         try {
             return Boolean.parseBoolean(value);

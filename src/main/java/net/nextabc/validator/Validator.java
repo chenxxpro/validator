@@ -165,8 +165,10 @@ public class Validator {
             if (Texts.isNullOrEmpty(field.optsKey)) {
                 continue;
             }
-            final String value = input.get(field.optsKey);
-            out.put(field.optsKey, parseValue(field.optsValueType, value));
+            final Object value = parseValue(field.optsValueType, input.get(field.optsKey));
+            if (value != null) {
+                out.put(field.optsKey, null);
+            }
         }
         return out;
     }

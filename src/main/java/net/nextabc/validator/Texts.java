@@ -25,6 +25,15 @@ public class Texts {
         return true;
     }
 
+    public static boolean isLetters(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            if (!Character.isLetter(value.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     ////
 
     public static int mustInt(String value) throws ValidationException {
@@ -44,6 +53,28 @@ public class Texts {
         }
         try {
             return Long.parseLong(value);
+        } catch (Exception e) {
+            throw new ValidationException("参数不能解析为Long类型:[" + value + "]", e);
+        }
+    }
+
+    public static float mustFloat(String value) throws ValidationException {
+        if (value == null) {
+            return 0;
+        }
+        try {
+            return Float.parseFloat(value);
+        } catch (Exception e) {
+            throw new ValidationException("参数不能解析为Long类型:[" + value + "]", e);
+        }
+    }
+
+    public static double mustDouble(String value) throws ValidationException {
+        if (value == null) {
+            return 0;
+        }
+        try {
+            return Double.parseDouble(value);
         } catch (Exception e) {
             throw new ValidationException("参数不能解析为Long类型:[" + value + "]", e);
         }

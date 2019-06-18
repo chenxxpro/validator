@@ -19,6 +19,11 @@ public interface Tester {
             super(initialCapacity);
         }
 
+        public Options field(String name, Object value) {
+            put(name, value);
+            return this;
+        }
+
         @SuppressWarnings("unchecked")
         public <T> T option(String name) {
             return (T) this.get(name);

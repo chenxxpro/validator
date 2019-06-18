@@ -107,24 +107,32 @@ public class Validator {
     //// 扩展功能
 
     public Validator intField(String key, Scheme... schemes) {
-        return dataField(key, DataType.Int, schemes);
+        return valueField(key, ValueType.Int, schemes);
     }
 
     public Validator longField(String key, Scheme... schemes) {
-        return dataField(key, DataType.Long, schemes);
+        return valueField(key, ValueType.Long, schemes);
+    }
+
+    public Validator floatField(String key, Scheme... schemes) {
+        return valueField(key, ValueType.Float, schemes);
+    }
+
+    public Validator doubleField(String key, Scheme... schemes) {
+        return valueField(key, ValueType.Double, schemes);
     }
 
     public Validator boolField(String key, Scheme... schemes) {
-        return dataField(key, DataType.Boolean, schemes);
+        return valueField(key, ValueType.Boolean, schemes);
     }
 
-    public Validator strField(String key, Scheme... schemes) {
-        return dataField(key, DataType.String, schemes);
+    public Validator stringField(String key, Scheme... schemes) {
+        return valueField(key, ValueType.String, schemes);
     }
 
-    public Validator dataField(String key, DataType type, Scheme... schemes) {
+    public Validator valueField(String key, ValueType type, Scheme... schemes) {
         return addField(new Field()
-                .optionDataType(type)
+                .optionValueType(type)
                 .optionKey(key)
                 .schemes(schemes));
     }
@@ -158,27 +166,34 @@ public class Validator {
                 continue;
             }
             final String value = input.get(field.optsKey);
-            switch (field.optsDataType) {
-                case Int:
-                    out.put(field.optsKey, Texts.mustInt(value));
-                    break;
-
-                case Long:
-                    out.put(field.optsKey, Texts.mustLong(value));
-                    break;
-
-                case Boolean:
-                    out.put(field.optsKey, Texts.mustBoolean(value));
-                    break;
-
-                default:
-                    out.put(field.optsKey, value);
-            }
+            out.put(field.optsKey, parseValue(field.optsValueType, value));
         }
         return out;
     }
 
     ////
+
+    private Object parseValue(ValueType type, String value) throws ValidationException {
+        switch (type) {
+            case Int:
+                return Texts.mustInt(value);
+
+            case Long:
+                return Texts.mustLong(value);
+
+            case Float:
+                return Texts.mustFloat(value);
+
+            case Double:
+                return Texts.mustDouble(value);
+
+            case Boolean:
+                return Texts.mustBoolean(value);
+
+            default:
+                return value;
+        }
+    }
 
     private Result performTest(Field field) {
         final String value = field.source.value();

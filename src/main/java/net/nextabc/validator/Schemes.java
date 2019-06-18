@@ -16,16 +16,22 @@ public class Schemes {
     public static final int HIGH_PRIORITY = Integer.MIN_VALUE;
     public static final int DEFAULT_PRIORITY = 0;
 
-    public static Scheme require() {
-        return notNullOrEmpty();
-    }
+    public static Scheme Optional = null;
 
-    public static Scheme notNullOrEmpty() {
+    public static Scheme require() {
         return new Scheme(
                 HIGH_PRIORITY,
                 new NotNullOrEmptyTester(), null)
                 .dontTrimValue()
                 .message("参数{key}不能为空");
+    }
+
+    public static Scheme ifRequire(boolean require) {
+        return require ? require() : Optional;
+    }
+
+    public static Scheme notNullOrEmpty() {
+        return require();
     }
 
     public static Scheme digits() {
@@ -36,12 +42,52 @@ public class Schemes {
                 .message("参数{key}必须为数字");
     }
 
+    public static Scheme letters() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new LettersTester(), null)
+                .dontTrimValue()
+                .message("参数{key}必须为字母");
+    }
+
+    public static Scheme lettersOrDigits() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new LetterDigitsTester(), null)
+                .dontTrimValue()
+                .message("参数{key}必须为数字或者字母");
+    }
+
     public static Scheme email() {
         return new Scheme(
                 DEFAULT_PRIORITY,
                 new EmailTester(), null)
                 .trimValue(true)
                 .message("参数{key}必须为有效的邮件地址");
+    }
+
+    public static Scheme host() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new HostTester(), null)
+                .trimValue(true)
+                .message("参数{key}必须为有效的主机地址");
+    }
+
+    public static Scheme ipv4() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new IPv4Tester(), null)
+                .trimValue(true)
+                .message("参数{key}必须为有效的IPv4地址");
+    }
+
+    public static Scheme cnMobile() {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new CNMobileTester(), null)
+                .trimValue(true)
+                .message("参数{key}必须为有效的手机号码");
     }
 
     public static Scheme cnIdCard() {
@@ -78,6 +124,14 @@ public class Schemes {
                 new MinLengthTester(), Tester.Options.of("length", min))
                 .dontTrimValue()
                 .message("参数{key}最小字符长度为" + min);
+    }
+
+    public static Scheme rangeLength(int min, int max) {
+        return new Scheme(
+                DEFAULT_PRIORITY,
+                new MinLengthTester(), Tester.Options.of("min", min).field("max", max))
+                .dontTrimValue()
+                .message("参数{key}字符长度为[" + min + "," + max + "]");
     }
 
     public static Scheme unixTimestamp() {

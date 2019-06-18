@@ -1,6 +1,7 @@
 package net.nextabc.validator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 陈哈哈 (bitschen@163.com)
@@ -18,7 +19,7 @@ public class Field {
     /**
      * 目标数据类型
      */
-    DataType optsDataType = DataType.String;
+    ValueType optsValueType = ValueType.String;
 
     // Vars
 
@@ -30,8 +31,7 @@ public class Field {
     }
 
     public Field schemes(Collection<Scheme> schemes) {
-        schemes.removeIf(Objects::isNull);
-        this.schemes.addAll(schemes);
+        this.schemes.addAll(schemes.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         return this;
     }
 
@@ -44,15 +44,15 @@ public class Field {
         for (Object opt : opts) {
             if (opt instanceof String) {
                 this.optionKey((String) opt);
-            } else if (opt instanceof DataType) {
-                this.optionDataType((DataType) opt);
+            } else if (opt instanceof ValueType) {
+                this.optionValueType((ValueType) opt);
             }
         }
         return this;
     }
 
-    public Field optionDataType(DataType type) {
-        this.optsDataType = type;
+    public Field optionValueType(ValueType type) {
+        this.optsValueType = type;
         return this;
     }
 
@@ -63,10 +63,10 @@ public class Field {
 
     //
 
-    public static Field create(String key, DataType type, Source source, Scheme... schemes) {
+    public static Field create(String key, ValueType type, Source source, Scheme... schemes) {
         return new Field()
                 .optionKey(key)
-                .optionDataType(type)
+                .optionValueType(type)
                 .source(source)
                 .schemes(schemes);
     }

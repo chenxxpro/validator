@@ -1,9 +1,6 @@
 package net.nextabc.validator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author 陈哈哈 (bitschen@163.com)
@@ -29,11 +26,11 @@ public class Field {
     Source source;
 
     public Field schemes(Scheme... schemes) {
-        this.schemes.addAll(Arrays.asList(schemes));
-        return this;
+        return this.schemes(Arrays.asList(schemes));
     }
 
     public Field schemes(Collection<Scheme> schemes) {
+        schemes.removeIf(Objects::isNull);
         this.schemes.addAll(schemes);
         return this;
     }

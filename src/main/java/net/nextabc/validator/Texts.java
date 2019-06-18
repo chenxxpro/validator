@@ -28,6 +28,9 @@ public class Texts {
     ////
 
     public static int mustInt(String value) throws ValidationException {
+        if (value == null) {
+            return 0;
+        }
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {
@@ -36,6 +39,9 @@ public class Texts {
     }
 
     public static long mustLong(String value) throws ValidationException {
+        if (value == null) {
+            return 0;
+        }
         try {
             return Long.parseLong(value);
         } catch (Exception e) {
@@ -43,14 +49,10 @@ public class Texts {
         }
     }
 
-    public static String mustString(String value) throws ValidationException {
-        if (value == null || value.isEmpty()) {
-            throw new ValidationException("参数不能为空的String类型");
-        }
-        return value;
-    }
-
     public static boolean mustBoolean(String value) throws ValidationException {
+        if (value == null) {
+            return false;
+        }
         try {
             return Boolean.parseBoolean(value);
         } catch (Exception e) {

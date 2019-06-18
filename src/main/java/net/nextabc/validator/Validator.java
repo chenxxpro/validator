@@ -8,8 +8,6 @@ import java.util.*;
  */
 public class Validator {
 
-    private static final Comparator<Scheme> SORT = Comparator.comparingInt(lhs -> lhs.priority);
-
     private final List<Field> fields = new ArrayList<>();
     private final Map<String, Field> keyFields = new HashMap<>();
 
@@ -26,7 +24,10 @@ public class Validator {
         }
         final List<Result> results = new ArrayList<>(1);
         for (Field field : this.fields) {
-            field.setSourceByKey(input);
+            // 指定Key时，从Input获取数据并生成Source
+            if (!Texts.isNullOrEmpty(field.optsKey)) {
+                field.source(() -> input.get(field.optsKey));
+            }
             final Result ret = performTest(field);
             if (null != ret && !ret.passed) {
                 results.add(ret);
@@ -79,43 +80,6 @@ public class Validator {
     }
 
     /**
-     * 解析参数到指定数据类型
-     *
-     * @param input 原始输入数据
-     * @return 已解析到特定类型的Map
-     * @throws ValidationException 解析参数失败时
-     */
-    public Map<String, Object> parse(Map<String, String> input) throws ValidationException {
-        final Map<String, Object> out = new HashMap<>(input.size());
-        for (Field field : this.fields) {
-            if (Texts.isNullOrEmpty(field.key)) {
-                continue;
-            }
-            final String value = input.get(field.key);
-            if (value == null) {
-                continue;
-            }
-            switch (field.type) {
-                case Int:
-                    out.put(field.key, Texts.mustInt(value));
-                    break;
-
-                case Long:
-                    out.put(field.key, Texts.mustLong(value));
-                    break;
-
-                case Boolean:
-                    out.put(field.key, Texts.mustBoolean(value));
-                    break;
-
-                default:
-                    out.put(field.key, value);
-            }
-        }
-        return out;
-    }
-
-    /**
      * 添加指定Key的校验条目
      *
      * @param key     数值Key
@@ -123,16 +87,8 @@ public class Validator {
      * @return Validator
      */
     public Validator addField(String key, Scheme... schemes) {
-        final Field found = this.keyFields.get(key);
-        if (null != found) {
-            found.addSchemes(schemes);
-        } else {
-            final Field newField = new Field().setKey(key)
-                    .addSchemes(schemes);
-            this.fields.add(newField);
-            this.keyFields.put(key, newField);
-        }
-        return this;
+        return addField(new Field()
+                .optionKey(key).schemes(schemes));
     }
 
     /**
@@ -143,60 +99,95 @@ public class Validator {
      * @return Validator
      */
     public Validator addField(Source source, Scheme... schemes) {
-        this.fields.add(new Field().setSource(source)
-                .addSchemes(schemes));
-        return this;
+        return addField(new Field()
+                .source(source)
+                .schemes(schemes));
     }
 
-    /**
-     * 添加指定Key的校验条目
-     *
-     * @param key     数值Key
-     * @param schemes 校验方案列表
-     * @return Validator
-     */
-    public FluentField field(String key, Scheme... schemes) {
-        FluentField f = new FluentField(this);
-        f.setKey(key);
-        f.addSchemes(schemes);
-        return f;
+    //// 扩展功能
+
+    public Validator intField(String key, Scheme... schemes) {
+        return dataField(key, DataType.Int, schemes);
+    }
+
+    public Validator longField(String key, Scheme... schemes) {
+        return dataField(key, DataType.Long, schemes);
+    }
+
+    public Validator boolField(String key, Scheme... schemes) {
+        return dataField(key, DataType.Boolean, schemes);
+    }
+
+    public Validator strField(String key, Scheme... schemes) {
+        return dataField(key, DataType.String, schemes);
+    }
+
+    public Validator dataField(String key, DataType type, Scheme... schemes) {
+        return addField(new Field()
+                .optionDataType(type)
+                .optionKey(key)
+                .schemes(schemes));
     }
 
     /**
      * 添加指定数据源的校验条目
      *
-     * @param source  数据源
-     * @param schemes 校验方案
+     * @param in 数据源校验条目
      * @return Validator
      */
-    public FluentField field(Source source, Scheme... schemes) {
-        FluentField f = new FluentField(this);
-        f.setSource(source);
-        f.addSchemes(schemes);
-        return f;
+    public Validator addField(Field in) {
+        final Field found = this.keyFields.get(in.optsKey);
+        if (null != found) {
+            found.schemes(in.schemes);
+        } else {
+            final Field newField = new Field()
+                    .optionKey(in.optsKey)
+                    .schemes(in.schemes);
+            this.fields.add(newField);
+            this.keyFields.put(in.optsKey, newField);
+        }
+        return this;
     }
 
-    ////
+    /**
+     * 解析参数到指定数据类型
+     *
+     * @param input 原始输入数据
+     * @return 已解析到特定类型的Map
+     * @throws ValidationException 解析参数失败时
+     */
+    public Map<String, Object> parseByKey(Map<String, String> input) throws ValidationException {
+        final Map<String, Object> out = new HashMap<>(input.size());
+        for (Field field : this.fields) {
+            if (Texts.isNullOrEmpty(field.optsKey)) {
+                continue;
+            }
+            final String value = input.get(field.optsKey);
+            switch (field.optsDataType) {
+                case Int:
+                    out.put(field.optsKey, Texts.mustInt(value));
+                    break;
 
-    public static class FluentField extends Field {
+                case Long:
+                    out.put(field.optsKey, Texts.mustLong(value));
+                    break;
 
-        private final Validator ref;
+                case Boolean:
+                    out.put(field.optsKey, Texts.mustBoolean(value));
+                    break;
 
-        public FluentField(Validator ref) {
-            this.ref = ref;
+                default:
+                    out.put(field.optsKey, value);
+            }
         }
-
-        public Validator add() {
-            ref.fields.add(this);
-            return ref;
-        }
+        return out;
     }
 
     ////
 
     private Result performTest(Field field) {
         final String value = field.source.value();
-        field.schemes.sort(SORT);
+        field.schemes.sort(Comparator.comparingInt(lhs -> lhs.priority));
         try {
             for (Scheme scheme : field.schemes) {
                 final String testValue = scheme.processValue(value);

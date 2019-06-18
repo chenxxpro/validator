@@ -33,8 +33,8 @@ ext {
     projectVersion = project.version
     projectName = rootProject.name
     projectDesc = "Validator: A Java8 validator library"
-    projectURL = "https://github.com/bitschen/validator-java"
-    projectVCS = "https://github.com/bitschen/validator-java"
+    projectURL = "https://github.com/bitschen/validator"
+    projectVCS = "https://github.com/bitschen/validator"
 }
 
 tasks.withType(JavaCompile) {

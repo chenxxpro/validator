@@ -167,7 +167,7 @@ public class Validator {
             }
             final Object value = parseValue(field.optsValueType, input.get(field.optsKey));
             if (value != null) {
-                out.put(field.optsKey, null);
+                out.put(field.optsKey, value);
             }
         }
         return out;

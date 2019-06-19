@@ -11,5 +11,5 @@ repositories {
 	}
 }
 // And add
-compile 'net.nextabc:validator:1.1.2'
+compile 'net.nextabc:validator:1.1.3'
 ```

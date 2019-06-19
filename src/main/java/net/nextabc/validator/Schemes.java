@@ -129,7 +129,7 @@ public class Schemes {
     public static Scheme rangeLength(int min, int max) {
         return new Scheme(
                 DEFAULT_PRIORITY,
-                new MinLengthTester(), Tester.Options.of("min", min).field("max", max))
+                new RangeLengthTester(), Tester.Options.of("min", min).field("max", max))
                 .dontTrimValue()
                 .message("参数{key}字符长度为[" + min + "," + max + "]");
     }

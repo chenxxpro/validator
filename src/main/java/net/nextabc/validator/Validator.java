@@ -12,15 +12,15 @@ public class Validator {
     private final Set<String> keys = new HashSet<>();
 
     /**
-     * 根据给定数据，校验并返回结果
+     * 根据给定数据，检查并返回结果
      *
-     * @param input        数据
-     * @param stopWhenFail 是否发生校验失败时即停止检查
-     * @return 校验结果列表
+     * @param input        输入数据，KeyValue类型
+     * @param stopWhenFail 是否发生检查失败时即停止检查
+     * @return 检查结果列表
      */
     public List<Result> test(Map<String, String> input, boolean stopWhenFail) {
         if (fields.isEmpty()) {
-            throw new IllegalArgumentException("没有任何查供校验的配置");
+            throw new IllegalArgumentException("没有任何检查配置");
         }
         final List<Result> results = new ArrayList<>(1);
         for (Field field : this.fields) {
@@ -36,7 +36,7 @@ public class Validator {
                 }
             }
         }
-        // 至少返回一个校验通过的结果
+        // 至少返回一个检查通过的结果
         if (results.isEmpty()) {
             results.add(Result.create(true, "PASSED"));
         }
@@ -44,21 +44,21 @@ public class Validator {
     }
 
     /**
-     * 根据给定数据，校验并返回结果。发生校验失败时即停止检查。
+     * 根据给定数据，检查并返回结果。发生检查失败时即停止检查。
      *
      * @param input 数据
-     * @return 校验结果列表
+     * @return 检查结果列表
      */
     public Result test(Map<String, String> input) {
         return test(input, true).get(0);
     }
 
     /**
-     * 根据给定数据，校验并返回结果。发生校验失败时即停止检查。
+     * 根据给定数据，检查并返回结果。发生检查失败时即停止检查。
      *
      * @param input 数据
-     * @return 校验结果。
-     * @throws ValidationException 如果校验失败，抛出异常
+     * @return 检查结果。
+     * @throws ValidationException 如果检查失败，抛出异常
      */
     public boolean check(Map<String, String> input) throws ValidationException {
         final Result r = test(input);
@@ -70,20 +70,20 @@ public class Validator {
     }
 
     /**
-     * 根据给定数据，校验并返回结果。检查所有选项
+     * 根据给定数据，检查并返回结果。检查所有选项
      *
      * @param input 数据
-     * @return 校验结果列表
+     * @return 检查结果列表
      */
     public List<Result> testAll(Map<String, String> input) {
         return test(input, false);
     }
 
     /**
-     * 添加指定Key的校验条目
+     * 添加指定Key的检查条目
      *
      * @param key     数值Key
-     * @param schemes 校验方案列表
+     * @param schemes 检查方案列表
      * @return Validator
      */
     public Validator addField(String key, Scheme... schemes) {
@@ -92,10 +92,10 @@ public class Validator {
     }
 
     /**
-     * 添加指定数据源的校验条目
+     * 添加指定数据源的检查条目
      *
      * @param source  数据源
-     * @param schemes 校验方案
+     * @param schemes 检查方案
      * @return Validator
      */
     public Validator addField(Source source, Scheme... schemes) {
@@ -106,30 +106,80 @@ public class Validator {
 
     //// 扩展功能
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator intField(String key, Scheme... schemes) {
         return valueField(key, ValueType.Int, schemes);
     }
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator longField(String key, Scheme... schemes) {
         return valueField(key, ValueType.Long, schemes);
     }
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator floatField(String key, Scheme... schemes) {
         return valueField(key, ValueType.Float, schemes);
     }
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator doubleField(String key, Scheme... schemes) {
         return valueField(key, ValueType.Double, schemes);
     }
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator boolField(String key, Scheme... schemes) {
         return valueField(key, ValueType.Boolean, schemes);
     }
 
+    /**
+     * 添加解析数据类型为Int的检查条目
+     *
+     * @param key     数值Key
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator stringField(String key, Scheme... schemes) {
         return valueField(key, ValueType.String, schemes);
     }
 
+    /**
+     * 添加检查条目，指定其解析数值类型。
+     *
+     * @param key     数值Key
+     * @param type    解析数值类型
+     * @param schemes Scheme列表
+     * @return Validator
+     */
     public Validator valueField(String key, ValueType type, Scheme... schemes) {
         return addField(new Field()
                 .optionValueType(type)
@@ -138,9 +188,9 @@ public class Validator {
     }
 
     /**
-     * 添加指定数据源的校验条目
+     * 添加指定数据源的检查条目
      *
-     * @param newField 数据源校验条目
+     * @param newField 数据源检查条目
      * @return Validator
      */
     public Validator addField(Field newField) {
@@ -202,8 +252,7 @@ public class Validator {
         field.schemes.sort(Comparator.comparingInt(lhs -> lhs.priority));
         try {
             for (Scheme scheme : field.schemes) {
-                final String testValue = scheme.processValue(value);
-                final boolean passed = scheme.perform(testValue);
+                final boolean passed = scheme.perform(value);
                 if (!passed) {
                     final String message = scheme.message.replace("{key}", field.optsKey);
                     return Result.create(false, message);

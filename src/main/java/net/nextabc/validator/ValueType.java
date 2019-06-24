@@ -1,8 +1,9 @@
 package net.nextabc.validator;
 
 /**
+ * 解析数值类型
+ *
  * @author 陈哈哈 (bitschen@163.com)
- * @since 1.0.0
  */
 public enum ValueType {
     Int,

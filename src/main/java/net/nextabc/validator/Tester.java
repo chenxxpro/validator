@@ -4,15 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 检查参数接口
+ *
  * @author 陈哈哈 (bitschen@163.com)
- * @since 1.0.0
  */
 public interface Tester {
 
+    /**
+     * 根据Options选项，检查输入参数是否符合检查规则
+     *
+     * @param opts  Options, Nullable
+     * @param value 输入参数， Nullable
+     * @return 是否符合检查规则
+     * @throws Exception 如果检查过程出错，抛出异常
+     */
     boolean test(Options opts, String value) throws Exception;
 
     ////
 
+    /**
+     * 检查选项
+     */
     class Options extends HashMap<String, Object> {
 
         public Options(int initialCapacity) {

@@ -14,5 +14,13 @@ public abstract class EmptyableTester implements Tester {
         }
     }
 
+    /**
+     * Evaluates this predicate on the given argument.
+     *
+     * @param opts  Options, nullable
+     * @param value the input value, NotNull and NotEmpty.
+     * @return {@code true} if the input value matches the tester, otherwise {@code false}
+     * @throws Exception throw Exception if error
+     */
     protected abstract boolean testNotEmptyValue(Options opts, String value) throws Exception;
 }

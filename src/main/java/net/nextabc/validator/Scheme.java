@@ -1,8 +1,8 @@
 package net.nextabc.validator;
 
 /**
+ * Scheme是校验模式，包括检查条目的Tester接口和对输入数据的处理方法。
  * @author 陈哈哈 (bitschen@163.com)
- * @since 1.0.0
  */
 public class Scheme {
 
@@ -37,16 +37,31 @@ public class Scheme {
         this.options = opts;
     }
 
+    /**
+     * 设置Scheme检查失败时的出错提示消息
+     *
+     * @param message 提示消息
+     * @return Scheme
+     */
     public Scheme message(String message) {
         this.message = message;
         return this;
     }
 
+    /**
+     * 设置在Scheme检查时，是否需要对输入参数Trim处理。
+     * @param trim 是否Trim操作，默认为false
+     * @return Scheme
+     */
     public Scheme trimValue(boolean trim) {
         this.trimValue = trim;
         return this;
     }
 
+    /**
+     * 设置Scheme检查时，不要Trim输入参数。
+     * @return Scheme
+     */
     public Scheme dontTrimValue() {
         return trimValue(false);
     }
@@ -54,10 +69,11 @@ public class Scheme {
     ////
 
     boolean perform(String value) throws Exception {
-        return this.tester.test(this.options, value);
+        return this.tester.test(this.options,
+                processValue(value));
     }
 
-    String processValue(String value) {
+    private String processValue(String value) {
         if (trimValue) {
             return value.trim();
         } else {

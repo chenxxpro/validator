@@ -68,16 +68,30 @@ public class Scheme {
 
     ////
 
-    boolean perform(String value) throws Exception {
+    boolean perform(String nullableValue) throws Exception {
         return this.tester.test(this.options,
-                processValue(value));
+                processValue(nullableValue));
     }
 
-    private String processValue(String value) {
-        if (trimValue) {
-            return value.trim();
+    private String processValue(String nullableValue) {
+        if (null != nullableValue && trimValue) {
+            return nullableValue.trim();
         } else {
-            return value;
+            return nullableValue;
         }
+    }
+
+    ////
+
+
+    @Override
+    public String toString() {
+        return "Scheme{" +
+                "message='" + message + '\'' +
+                ", trimValue=" + trimValue +
+                ", priority=" + priority +
+                ", tester=" + tester +
+                ", options=" + options +
+                '}';
     }
 }

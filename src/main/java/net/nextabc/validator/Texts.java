@@ -1,12 +1,20 @@
 package net.nextabc.validator;
 
+import java.util.Arrays;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author 陈哈哈 (bitschen@163.com)
  * @since 1.0.0
  */
 public class Texts {
+
+
+    public static Set<String> setOf(Object...items){
+        return Arrays.stream(items).map(String::valueOf).collect(Collectors.toSet());
+    }
 
     public static boolean isNullOrEmpty(String in) {
         return null == in || in.length() == 0;

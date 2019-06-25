@@ -10,6 +10,7 @@ public class Validator {
 
     private final List<Field> fields = new ArrayList<>();
     private final Set<String> keys = new HashSet<>();
+    private boolean debug = false;
 
     /**
      * 根据给定数据，检查并返回结果
@@ -203,6 +204,17 @@ public class Validator {
     }
 
     /**
+     * 设置是否启用Debug输出
+     *
+     * @param enable 开启Debug
+     * @return Validator
+     */
+    public Validator debug(boolean enable) {
+        this.debug = enable;
+        return this;
+    }
+
+    /**
      * 解析参数到指定数据类型
      *
      * @param input 原始输入数据
@@ -248,17 +260,31 @@ public class Validator {
     }
 
     private Result performTest(Field field) {
-        final String value = field.source.value();
+        final String nullableValue = field.source.value();
         field.schemes.sort(Comparator.comparingInt(lhs -> lhs.priority));
         try {
             for (Scheme scheme : field.schemes) {
-                final boolean passed = scheme.perform(value);
+                final boolean passed = scheme.perform(nullableValue);
                 if (!passed) {
-                    final String message = scheme.message.replace("{key}", field.optsKey);
+                    final String err = scheme.message.replace("{key}", field.optsKey);
+                    final String message;
+                    if (debug) {
+                        message = err +
+                                "; RawValue=" + nullableValue +
+                                ", Key=" + field.optsKey +
+                                ", ValueType=" + field.optsValueType +
+                                ", " + scheme;
+                    } else {
+                        message = err;
+                    }
                     return Result.create(false, message);
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            if (debug) {
+                e.printStackTrace();
+            }
             return Result.create(false, "ERR:" + e.getMessage());
         }
         return null;

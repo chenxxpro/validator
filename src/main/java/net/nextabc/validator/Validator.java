@@ -13,10 +13,17 @@ public class Validator {
     private boolean debug = false;
 
     private MessageFormatter formatter = (template, field) -> {
-        String message = template;
-        message = message.replace("{name}", (field.optsName == null ? "" : field.optsName));
-        message = message.replace("{key}", (field.optsKey == null ? "" : field.optsKey));
-        return message;
+        final String name;
+        if (Texts.isNullOrEmpty(field.optsName)) {
+            if (Texts.isNullOrEmpty(field.optsKey)) {
+                name = "参数";
+            } else {
+                name = field.optsKey;
+            }
+        } else {
+            name = field.optsName;
+        }
+        return template.replace("{name}", name);
     };
 
     /**

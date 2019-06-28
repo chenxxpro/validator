@@ -23,7 +23,7 @@ public class Schemes {
                 HIGH_PRIORITY,
                 new NotNullOrEmptyTester(), null)
                 .dontTrimValue()
-                .message("{name}{key}不能为空");
+                .message("{name}不能为空");
     }
 
     public static Scheme ifRequire(boolean require) {
@@ -39,7 +39,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new DigitsTester(), null)
                 .dontTrimValue()
-                .message("{name}{key}必须是数字");
+                .message("{name}必须是数字");
     }
 
     public static Scheme letters() {
@@ -47,7 +47,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new LettersTester(), null)
                 .dontTrimValue()
-                .message("{name}{key}必须是字母");
+                .message("{name}必须是字母");
     }
 
     public static Scheme lettersOrDigits() {
@@ -55,7 +55,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new LetterDigitsTester(), null)
                 .dontTrimValue()
-                .message("{name}{key}必须是数字或字母");
+                .message("{name}必须是数字或字母");
     }
 
     public static Scheme email() {
@@ -63,7 +63,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new EmailTester(), null)
                 .trimValue(true)
-                .message("{name}{key}必须是有效的邮件地址");
+                .message("{name}必须是有效的邮件地址");
     }
 
     public static Scheme host() {
@@ -71,7 +71,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new HostTester(), null)
                 .trimValue(true)
-                .message("{name}{key}必须是有效的主机地址");
+                .message("{name}必须是有效的主机地址");
     }
 
     public static Scheme ipv4() {
@@ -79,7 +79,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new IPv4Tester(), null)
                 .trimValue(true)
-                .message("{name}{key}必须是有效的IPv4地址");
+                .message("{name}必须是有效的IPv4地址");
     }
 
     public static Scheme cnMobile() {
@@ -87,7 +87,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new CNMobileTester(), null)
                 .trimValue(true)
-                .message("{name}{key}必须是有效的手机号码");
+                .message("{name}必须是有效的手机号码");
     }
 
     public static Scheme cnIdCard() {
@@ -95,7 +95,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new CNIdCardTester(), null)
                 .trimValue(true)
-                .message("{name}{key}必须是有效的身份证号码");
+                .message("{name}必须是有效的身份证号码");
     }
 
     public static Scheme fixedLength(int fixedLength) {
@@ -103,7 +103,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new FixedLengthTester(), Tester.Options.of("length", fixedLength))
                 .dontTrimValue()
-                .message("{name}{key}长度必须等于" + fixedLength);
+                .message("{name}长度必须等于" + fixedLength);
     }
 
     public static Scheme length(int length) {
@@ -115,7 +115,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new MaxLengthTester(), Tester.Options.of("length", max))
                 .dontTrimValue()
-                .message("{name}{key}最大字符长度是" + max);
+                .message("{name}最大字符长度是" + max);
     }
 
     public static Scheme minLength(int min) {
@@ -123,7 +123,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new MinLengthTester(), Tester.Options.of("length", min))
                 .dontTrimValue()
-                .message("{name}{key}最小字符长度是" + min);
+                .message("{name}最小字符长度是" + min);
     }
 
     public static Scheme rangeLength(int min, int max) {
@@ -131,7 +131,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new RangeLengthTester(), Tester.Options.of("min", min).field("max", max))
                 .dontTrimValue()
-                .message("{name}{key}字符长度是[" + min + "," + max + "]");
+                .message("{name}字符长度是[" + min + "," + max + "]");
     }
 
     public static Scheme unixTimestamp() {
@@ -139,7 +139,7 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new UnixTimestampTester(), null)
                 .dontTrimValue()
-                .message("{name}{key}必须是Unix时间戳");
+                .message("{name}必须是Unix时间戳");
     }
 
     public static Scheme inSet(Set<String> allowed) {
@@ -149,6 +149,6 @@ public class Schemes {
                 DEFAULT_PRIORITY,
                 new InSetTester(), Tester.Options.from(map)
         ).dontTrimValue()
-                .message("{name}{key}不在允许的集合内");
+                .message("{name}不在允许的集合内");
     }
 }

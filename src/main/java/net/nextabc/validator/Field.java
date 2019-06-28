@@ -29,9 +29,8 @@ public class Field {
     ValueType optsValueType = ValueType.String;
 
     // Vars
-
+    private final Function<Field, Validator> addToHostFunc;
     final List<Scheme> schemes = new ArrayList<>();
-    final Function<Field, Validator> addToHostFunc;
     Source source;
 
     public Field(Function<Field, Validator> addToHostFunc) {

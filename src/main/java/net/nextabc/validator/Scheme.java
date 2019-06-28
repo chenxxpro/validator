@@ -90,7 +90,7 @@ public class Scheme {
                 "message='" + message + '\'' +
                 ", trimValue=" + trimValue +
                 ", priority=" + priority +
-                ", tester=" + tester +
+                ", tester=" + tester.getClass().getName() +
                 ", options=" + options +
                 '}';
     }

@@ -12,6 +12,13 @@ public class Validator {
     private final Set<String> keys = new HashSet<>();
     private boolean debug = false;
 
+    private MessageFormatter formatter = (template, field) -> {
+        String message = template;
+        message = message.replace("{name}", (field.optsName == null ? "" : field.optsName));
+        message = message.replace("{key}", (field.optsKey == null ? "" : field.optsKey));
+        return message;
+    };
+
     /**
      * 根据给定数据，检查并返回结果
      *
@@ -233,6 +240,17 @@ public class Validator {
     }
 
     /**
+     * 设置消息格式化处理接口
+     *
+     * @param formatter 出错消息格式化接口
+     * @return Validator
+     */
+    public Validator messageFormatter(MessageFormatter formatter) {
+        this.formatter = Objects.requireNonNull(formatter);
+        return this;
+    }
+
+    /**
      * 解析参数到指定数据类型
      *
      * @param input 原始输入数据
@@ -284,18 +302,15 @@ public class Validator {
             for (Scheme scheme : field.schemes) {
                 final boolean passed = scheme.perform(nullableValue);
                 if (!passed) {
-                    final String err = scheme.message.replace("{key}", field.optsKey);
-                    final String message;
                     if (debug) {
-                        message = err +
-                                "; RawValue=" + nullableValue +
+                        System.err.println("TEST FAILED" +
+                                ": RawValue=" + nullableValue +
                                 ", Key=" + field.optsKey +
+                                ", Name=" + field.optsName +
                                 ", ValueType=" + field.optsValueType +
-                                ", " + scheme;
-                    } else {
-                        message = err;
+                                ", " + scheme);
                     }
-                    return Result.create(false, message);
+                    return Result.create(false, formatter.format(scheme.message, field));
                 }
             }
         } catch (Exception e) {

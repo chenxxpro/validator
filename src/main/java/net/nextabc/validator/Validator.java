@@ -88,8 +88,7 @@ public class Validator {
      * @return Validator
      */
     public Validator addField(String key, Scheme... schemes) {
-        return addField(new Field()
-                .optionKey(key).schemes(schemes));
+        return field(key, ValueType.String, schemes).add();
     }
 
     /**
@@ -100,9 +99,7 @@ public class Validator {
      * @return Validator
      */
     public Validator addField(Source source, Scheme... schemes) {
-        return addField(new Field()
-                .source(source)
-                .schemes(schemes));
+        return field("", ValueType.String, schemes).source(source).add();
     }
 
     //// 扩展功能
@@ -115,7 +112,11 @@ public class Validator {
      * @return Validator
      */
     public Validator intField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.Int, schemes);
+        return fieldInt(key, schemes).add();
+    }
+
+    public Field fieldInt(String key, Scheme... schemes) {
+        return field(key, ValueType.Int, schemes);
     }
 
     /**
@@ -126,7 +127,11 @@ public class Validator {
      * @return Validator
      */
     public Validator longField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.Long, schemes);
+        return fieldLong(key, schemes).add();
+    }
+
+    public Field fieldLong(String key, Scheme... schemes) {
+        return field(key, ValueType.Long, schemes);
     }
 
     /**
@@ -137,7 +142,11 @@ public class Validator {
      * @return Validator
      */
     public Validator floatField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.Float, schemes);
+        return fieldFloat(key, schemes).add();
+    }
+
+    public Field fieldFloat(String key, Scheme... schemes) {
+        return field(key, ValueType.Float, schemes);
     }
 
     /**
@@ -148,7 +157,11 @@ public class Validator {
      * @return Validator
      */
     public Validator doubleField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.Double, schemes);
+        return fieldDouble(key, schemes).add();
+    }
+
+    public Field fieldDouble(String key, Scheme... schemes) {
+        return field(key, ValueType.Double, schemes);
     }
 
     /**
@@ -159,7 +172,11 @@ public class Validator {
      * @return Validator
      */
     public Validator boolField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.Boolean, schemes);
+        return fieldBool(key, schemes).add();
+    }
+
+    public Field fieldBool(String key, Scheme... schemes) {
+        return field(key, ValueType.Boolean, schemes);
     }
 
     /**
@@ -170,22 +187,11 @@ public class Validator {
      * @return Validator
      */
     public Validator stringField(String key, Scheme... schemes) {
-        return valueField(key, ValueType.String, schemes);
+        return fieldString(key, schemes).add();
     }
 
-    /**
-     * 添加检查条目，指定其解析数值类型。
-     *
-     * @param key     数值Key
-     * @param type    解析数值类型
-     * @param schemes Scheme列表
-     * @return Validator
-     */
-    public Validator valueField(String key, ValueType type, Scheme... schemes) {
-        return addField(new Field()
-                .optionValueType(type)
-                .optionKey(key)
-                .schemes(schemes));
+    public Field fieldString(String key, Scheme... schemes) {
+        return field(key, ValueType.String, schemes);
     }
 
     /**
@@ -201,6 +207,18 @@ public class Validator {
         this.fields.add(newField);
         this.keys.add(newField.optsKey);
         return this;
+    }
+
+    /**
+     * 创建Field对象，需要调用 {@link Field#add()} 函数来将Field添加到Validator。
+     *
+     * @param key     Key
+     * @param type    解析数据类型
+     * @param schemes Scheme列表
+     * @return Field对象
+     */
+    public Field field(String key, ValueType type, Scheme... schemes) {
+        return new Field(this::addField).optionValueType(type).optionKey(key).schemes(schemes);
     }
 
     /**

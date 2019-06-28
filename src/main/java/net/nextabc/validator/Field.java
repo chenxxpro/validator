@@ -1,6 +1,7 @@
 package net.nextabc.validator;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +19,11 @@ public class Field {
     String optsKey;
 
     /**
+     * 参数名
+     */
+    String optsName;
+
+    /**
      * 目标数据类型
      */
     ValueType optsValueType = ValueType.String;
@@ -25,7 +31,12 @@ public class Field {
     // Vars
 
     final List<Scheme> schemes = new ArrayList<>();
+    final Function<Field, Validator> addToHostFunc;
     Source source;
+
+    public Field(Function<Field, Validator> addToHostFunc) {
+        this.addToHostFunc = addToHostFunc;
+    }
 
     /**
      * 添加Scheme列表
@@ -39,6 +50,7 @@ public class Field {
 
     /**
      * 添加Scheme列表
+     *
      * @param schemes Schemes
      * @return Field
      */
@@ -49,6 +61,7 @@ public class Field {
 
     /**
      * 添加数据源接口
+     *
      * @param source 数据源接口
      * @return Field
      */
@@ -59,6 +72,7 @@ public class Field {
 
     /**
      * 设置Option，指定解析数值类型
+     *
      * @param type 数值类型
      * @return Field
      */
@@ -69,6 +83,7 @@ public class Field {
 
     /**
      * 设置Option，指定解析数据源的Key
+     *
      * @param key 数据源的Key，
      * @return Field
      */
@@ -77,17 +92,24 @@ public class Field {
         return this;
     }
 
-    //
+    /**
+     * 设置Option, 指定参数名
+     *
+     * @param name 参数名
+     * @return Field
+     */
+    public Field optionName(String name) {
+        this.optsName = name;
+        return this;
+    }
 
     /**
-     * 工厂方法
+     * 通过外置函数添加到Validator中
+     *
+     * @return Validator
      */
-    public static Field create(String key, ValueType type, Source source, Scheme... schemes) {
-        return new Field()
-                .optionKey(key)
-                .optionValueType(type)
-                .source(source)
-                .schemes(schemes);
+    public Validator add() {
+        return this.addToHostFunc.apply(this);
     }
 
 }

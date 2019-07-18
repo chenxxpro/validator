@@ -45,7 +45,7 @@ public class Texts {
     ////
 
     public static Integer mustInt(String value) throws ValidationException {
-        if (value == null) {
+        if (isNullOrEmpty(value)) {
             return null;
         }
         try {
@@ -56,7 +56,7 @@ public class Texts {
     }
 
     public static Long mustLong(String value) throws ValidationException {
-        if (value == null) {
+        if (isNullOrEmpty(value)) {
             return null;
         }
         try {
@@ -67,7 +67,7 @@ public class Texts {
     }
 
     public static Float mustFloat(String value) throws ValidationException {
-        if (value == null) {
+        if (isNullOrEmpty(value)) {
             return null;
         }
         try {
@@ -78,7 +78,7 @@ public class Texts {
     }
 
     public static Double mustDouble(String value) throws ValidationException {
-        if (value == null) {
+        if (isNullOrEmpty(value)) {
             return null;
         }
         try {
@@ -89,7 +89,7 @@ public class Texts {
     }
 
     public static Boolean mustBoolean(String value) throws ValidationException {
-        if (value == null) {
+        if (isNullOrEmpty(value)) {
             return null;
         }
         try {
